@@ -77,9 +77,12 @@ oldMouseSCE <- SingleCellExperiment(
                 scale.data = oldMouseSeuratObj@scale.data[genes.use,])
 )
 
-## We now build the scAlign SCE object and compute PCs and/or CCs using Seurat for the assay defined by data.use. It is assumed that
-## the assay in `data.use` which is being used for the initial step of dimensionality reduction is properly normalized and scaled. 
-## Resulting combined matrices will always be ordered based on the sce.objects list order.
+```
+We now build the scAlign SCE object and compute PCs and/or CCs using Seurat for the assay defined by data.use. It is assumed that
+the assay in `data.use` which is being used for the initial step of dimensionality reduction is properly normalized and scaled. 
+Resulting combined matrices will always be ordered based on the sce.objects list order.
+
+```R
 scAlignHSC = scAlignCreateObject(sce.objects = list("YOUNG"=youngMouseSCE, "OLD"=oldMouseSCE),
                                  labels = list(cell_type[which(cell_age == "young")], cell_type[which(cell_age == "old")]),
                                  data.use="scale.data",
@@ -91,8 +94,8 @@ scAlignHSC = scAlignCreateObject(sce.objects = list("YOUNG"=youngMouseSCE, "OLD"
 ```
 
 ## Alignment of young and old HSCs
-Now we align the young and old cpopulations. scAlign returns a low-dimensional joint embedding space where the effect of age is
-removed allowing us to use the complete dataset for downstream analyses such as clustering or differential expression.
+Now we align the young and old cpopulations for multiple input types which are specified by `encoder.data`. `scAlign` returns a 
+low-dimensional joint embedding space where the effect of age is removed allowing us to use the complete dataset for downstream analyses such as clustering or differential expression. For the gene level input we also run the decoder procedure which projects each cell into logcount space for both conditions to perform paired single cell differential expressional.
 
 ```R
 ## Run scAlign with high_var_genes as input to the encoder (alignment) and logcounts with the decoder (projections).
