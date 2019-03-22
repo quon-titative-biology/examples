@@ -21,8 +21,8 @@ library(SingleCellExperiment)
 library(gridExtra)
 
 ## User paths
-working.dir = "/home/ucdnjj/lab-data/hsc-age" #where our data file, kowalcyzk_gene_counts.rda is located
-results.dir = "/home/ucdnjj/lab-results" #where the output should be stored
+working.dir = "." #where our data file, kowalcyzk_gene_counts.rda is located
+results.dir = "." #where the output should be stored
 
 ## Load in data
 load(file.path(working.dir, 'kowalcyzk_gene_counts.rda'))
