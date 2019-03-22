@@ -1,17 +1,17 @@
 # Tutorial: Alignment of C57BL/6 hemoteopietic stem cells (HSCs) from young and old mice from Kowalcyzk et al.
 
-This tutorial provides a guided alignment for two groups of cells from [Kowalczyk et al, 2015](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4665007/). In this experiment, single cell RNA (scRNA) sequencing profiles were generated from HSCs in young (2-3 mo) and old (>22 mo) C57BL/6 mice. Age related expression programs make a joint analysis of three isolated cell types long-term (LT), short-term (ST) and  multipotent progenitors (MPPs). In this tutorial we demonstrate the unsupervised alignment strategy of scAlign described in [Johansen et al, 2018](https://www.biorxiv.org/content/10.1101/504944v2) along with typical analysis utilizing the aligned dataset, and show how scAlign can identify and match cell types across age without using the labels as input.
+This tutorial provides a guided alignment for two groups of cells from [Kowalczyk et al, 2015](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4665007/). In this experiment, single cell RNA (scRNA) sequencing profiles were generated from HSCs in young (2-3 mo) and old (>22 mo) C57BL/6 mice. Age related expression programs make a joint analysis of three isolated cell types long-term (LT), short-term (ST) and  multipotent progenitors (MPPs). In this tutorial we demonstrate the unsupervised alignment strategy of `scAlign` described in [Johansen et al, 2018](https://www.biorxiv.org/content/10.1101/504944v2) along with typical analysis utilizing the aligned dataset, and show how `scAlign` can identify and match cell types across age without using the labels as input.
 
 ## Alignment goals
-The following is a walkthrough of a typical alignment problem for scAlign and has been designed to provide an overview of data preprocessing, alignment and finally analysis in our joint embedding space. Here, our primary goals include:
+The following is a walkthrough of a typical alignment problem for `scAlign` and has been designed to provide an overview of data preprocessing, alignment and finally analysis in our joint embedding space. Here, our primary goals include:
 
 1. Learning a low-dimensional cell state space in which cells group by function and type, regardless of condition (age).
 2. Computing a single cell paired differential expression map from paired cell projections.
 
 ## Data setup
-The gene count matrices used for this tutorial are hosted [here](https://github.com/quon-titative-biology/examples/scAlgin_kowalcyzk_et_al/kowalcyzk_gene_counts.rda).
+The gene count matrices used for this tutorial are hosted [here](https://github.com/quon-titative-biology/examples/blob/master/scAlign_kowalcyzk_et_al/kowalcyzk_gene_counts.rda).
 
-First, we perform a typical scRNA preprocessing step using the Seurat package. Then, reduce to the top 3,000 highly variable genes from both datasets to improve convergence and reduce computation time.
+First, we perform a typical scRNA preprocessing step using the `Seurat` package. Then, reduce to the top 3,000 highly variable genes from both datasets to improve convergence and reduce computation time.
 
 
 ```R
@@ -58,10 +58,10 @@ genes.use <- intersect(genes.use, rownames(oldMouseSeuratObj@scale.data))
 ```
 
 ## scAlign setup
-The general design of scAlign's makes it agnostic to the input RNA-seq data representation. Thus, the input data can either be
+The general design of `scAlign` makes it agnostic to the input RNA-seq data representation. Thus, the input data can either be
 gene-level counts, transformations of those gene level counts or a preliminary step of dimensionality reduction such
 as canonical correlates or principal component scores. Here we create the scAlign object from the previously defined
-Seurat objects and perform both PCA and CCA on the unaligned data.
+`Seurat` objects and perform both PCA and CCA on the unaligned data.
 
 ```R
 ## Create paired dataset SCE objects to pass into scAlignCreateObject
@@ -78,8 +78,8 @@ oldMouseSCE <- SingleCellExperiment(
 )
 
 ## We now build the scAlign SCE object and compute PCs and/or CCs using Seurat for the assay defined by data.use. It is assumed that
-## the assay being used for the initial step of dimensionality reduction is properly normalized and scaled. Resulting combined matrices
-## will always be ordered based on the sce.objects list order.
+## the assay in `data.use` which is being used for the initial step of dimensionality reduction is properly normalized and scaled. 
+## Resulting combined matrices will always be ordered based on the sce.objects list order.
 scAlignHSC = scAlignCreateObject(sce.objects = list("YOUNG"=youngMouseSCE, "OLD"=oldMouseSCE),
                                  labels = list(cell_type[which(cell_age == "young")], cell_type[which(cell_age == "old")]),
                                  data.use="scale.data",
@@ -146,9 +146,7 @@ combined_plot = grid.arrange(gene_plot, pca_plot, cca_plot, legend, nrow = 1, la
 ![Cell_batch](https://github.com/quon-titative-biology/examples/blob/master/scAlign_kowalcyzk_et_al/figures/combined_plot_alignment_stim.png)
 
 ## Paired differential expression of young and old cells.
-Since we have run the decoder for "ALIGNED-GENE" alignment we can also investigate the cell projections. The projections are saved as "YOUNG2OLD" and
-"OLD2YOUNG" in this example based on the provided names to `scAlignCreateObject`. "YOUNG2OLD" indicates the projection of young cells into the expression
-space of old cells. As a reminder the combined matrices are always in the order `of sce.objects`.
+Since we have run the decoder for "ALIGNED-GENE" alignment we can also investigate the paired differential of cells with respect to the young and old conditions. The projections are saved as "YOUNG2OLD" and "OLD2YOUNG" in `scAlignHSC` reducededDims. "YOUNG2OLD" indicates the projection of young cells into the expression space of old cells. As a reminder the combined matrices are always in the order `of sce.objects`.
 
 ```R 
 library(ComplexHeatmap)
