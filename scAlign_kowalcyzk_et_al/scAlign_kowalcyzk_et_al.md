@@ -146,7 +146,7 @@ combined_plot = grid.arrange(gene_plot, pca_plot, cca_plot, legend, nrow = 1, la
 ![Cell_batch](https://github.com/quon-titative-biology/examples/blob/master/scAlign_kowalcyzk_et_al/figures/combined_plot_alignment_stim.png)
 
 ## Paired differential expression of young and old cells.
-Since we have run the decoder for "ALIGNED-GENE" alignment we can also investigate the paired differential of cells with respect to the young and old conditions. The projections are saved as "YOUNG2OLD" and "OLD2YOUNG" in `scAlignHSC` reducededDims. "YOUNG2OLD" indicates the projection of young cells into the expression space of old cells. As a reminder the combined matrices are always in the order `of sce.objects`.
+Since we have run the decoder for "ALIGNED-GENE" alignment we can also investigate the paired differential of cells with respect to the young and old conditions. The projections are saved as "YOUNG2OLD" and "OLD2YOUNG" in `scAlignHSC` reducededDims. "YOUNG2OLD" indicates the projection of young cells into the expression space of old cells. As a reminder the combined matrices are always in the order of the sce.objects list.
 
 ```R 
 library(ComplexHeatmap)
