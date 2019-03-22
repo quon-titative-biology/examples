@@ -78,8 +78,7 @@ oldMouseSCE <- SingleCellExperiment(
 )
 
 ```
-We now build the scAlign SCE object and compute PCs and/or CCs using Seurat for the assay defined by data.use. It is assumed that
-the assay in `data.use` which is being used for the initial step of dimensionality reduction is properly normalized and scaled. 
+We now build the scAlign SCE object and compute PCs and/or CCs using Seurat for the assay defined by `data.use`. It is assumed that `data.use`, which is being used for the initial step of dimensionality reduction, is properly normalized and scaled. 
 Resulting combined matrices will always be ordered based on the sce.objects list order.
 
 ```R
