@@ -20,7 +20,7 @@ library(SingleCellExperiment)
 library(gridExtra)
 
 ## User paths
-working.dir = "/home/ucdnjj/lab-data/pancreas/" #where the data files are located
+working.dir = "." #where the data files are located
 results.dir = "." #where the output should be stored
 
 ## Load in data
