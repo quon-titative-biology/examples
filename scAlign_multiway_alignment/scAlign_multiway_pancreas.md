@@ -73,7 +73,7 @@ reducedDim(scAlignPancreas, "MultiCCA") = pancreas.multi.cca@dr$cca@cell.embeddi
 
 ## Alignment of sequencing protocols
 Now we align the young and old cpopulations for multiple input types which are specified by `encoder.data`. `scAlign` returns a
-low-dimensional joint embedding space where the effect of age is removed allowing us to use the complete dataset for downstream analyses such as clustering or differential expression. For the gene level input we also run the decoder procedure which projects each cell into logcount space for both conditions to perform paired single cell differential expressional.
+low-dimensional joint embedding space where the effect of age is removed allowing us to use the complete dataset for downstream analyses such as clustering.
 
 ```R
 ## Run scAlign with CCA results as input to the encoder (alignment).
