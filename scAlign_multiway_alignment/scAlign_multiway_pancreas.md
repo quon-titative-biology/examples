@@ -1,4 +1,4 @@
-# Tutorial: Alignment of pancreatic islet cells sequenced on multiple platforms.
+# Tutorial: Alignment of pancreatic islet cells sequenced using four different protocols.
 
 This tutorial provides a guided alignment of pancreatic islet cells sequenced across four prococols: CEL-Seq (GSE81076), CEL-Seq2 (GSE85241), Fluidigm C1 (GSE86469), and Smart-Seq2 (E-MTAB-5061) as described by [Seurat](https://satijalab.org/seurat/v3.0/pancreas_integration_label_transfer.html). In this tutorial we demonstrate the unsupervised alignment strategy of `scAlign` described in [Johansen et al, 2018](https://www.biorxiv.org/content/10.1101/504944v2) extended to alignment of multiple datasets (conditions) along with typical analysis utilizing the aligned dataset.
 
@@ -71,7 +71,7 @@ scAlignPancreas = scAlignCreateObject(sce.objects = pancreas.sce.list,
 reducedDim(scAlignPancreas, "MultiCCA") = pancreas.multi.cca@dr$cca@cell.embeddings
 ```
 
-## Alignment of young and old HSCs
+## Alignment of sequencing protocols
 Now we align the young and old cpopulations for multiple input types which are specified by `encoder.data`. `scAlign` returns a
 low-dimensional joint embedding space where the effect of age is removed allowing us to use the complete dataset for downstream analyses such as clustering or differential expression. For the gene level input we also run the decoder procedure which projects each cell into logcount space for both conditions to perform paired single cell differential expressional.
 
