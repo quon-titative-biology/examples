@@ -1,4 +1,4 @@
-# Tutorial: Alignment of C57BL/6 hemoteopietic stem cells (HSCs) from young and old mice from Kowalcyzk et al.
+# Tutorial: Alignment of pancreatic islet cells sequenced on multiple platforms.
 
 This tutorial provides a guided alignment of pancreatic islet cells sequenced across four prococols: CEL-Seq (GSE81076), CEL-Seq2 (GSE85241), Fluidigm C1 (GSE86469), and Smart-Seq2 (E-MTAB-5061) as described by [Seurat](https://satijalab.org/seurat/v3.0/pancreas_integration_label_transfer.html). In this tutorial we demonstrate the unsupervised alignment strategy of `scAlign` described in [Johansen et al, 2018](https://www.biorxiv.org/content/10.1101/504944v2) extended to alignment of multiple datasets (conditions) along with typical analysis utilizing the aligned dataset.
 
