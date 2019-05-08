@@ -48,8 +48,8 @@ pancreas.multi.cca = RunMultiCCA(pancreas.list, genes.use, num.ccs = 10)
 ## scAlign setup
 The general design of `scAlign` makes it agnostic to the input RNA-seq data representation. Thus, the input data can either be
 gene-level counts, transformations of those gene level counts or a preliminary step of dimensionality reduction such
-as canonical correlates or principal component scores. Here we create the scAlign object from the previously defined
-`Seurat` objects.
+as canonical correlates or principal component scores. Here we convert the previously defined
+`Seurat` objects to `SingleCellExperiment` objects in order to create the combined `scAlign` object.
 
 ```R
 ## Convert each Seurat object into an SCE object, being sure to retain Seurat's metadata in SCE's colData field
