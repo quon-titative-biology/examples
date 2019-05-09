@@ -90,3 +90,5 @@ scAlignPancreas = scAlignMulti(scAlignPancreas,
                         log.dir=file.path('./tmp'),
                         device="GPU")
 ```
+![Cell_label](https://github.com/quon-titative-biology/examples/blob/master/scAlign_multiway_alignment/figures/aligned_pancreas_celltype.png)
+![Cell_batch](https://github.com/quon-titative-biology/examples/blob/master/scAlign_multiway_alignment/figures/aligned_pancreas_protocol.png)
