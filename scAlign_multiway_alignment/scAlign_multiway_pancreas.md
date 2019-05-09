@@ -72,9 +72,7 @@ reducedDim(scAlignPancreas, "MultiCCA") = pancreas.multi.cca@dr$cca@cell.embeddi
 ```
 
 ## Alignment of sequencing protocols
-Now we align the pancreas islets sequenced across different protocols using the results of `RunMultiCCA` as input to `scAlign`. After alignment, `scAlign` returns a
-low-dimensional joint embedding space where the effect of sequencing protocol is removed allowing us to use the complete dataset for downstream analyses such as clustering
-or differential expression.
+Now we align the pancreas islets sequenced across different protocols using the results of `RunMultiCCA` as input to `scAlign`.
 
 ```R
 ## Run scAlign with CCA results as input to the encoder (alignment).
@@ -91,4 +89,7 @@ scAlignPancreas = scAlignMulti(scAlignPancreas,
                         log.dir=file.path('./tmp'),
                         device="GPU")
 ```
+After alignment, `scAlign` returns a
+low-dimensional joint embedding space where the effect of sequencing protocol is removed allowing us to use the complete dataset for downstream analyses such as clustering
+or differential expression.
 ![Results](https://github.com/quon-titative-biology/examples/blob/master/scAlign_multiway_alignment/figures/pancreas_result.png)
