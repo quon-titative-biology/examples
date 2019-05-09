@@ -90,4 +90,4 @@ scAlignPancreas = scAlignMulti(scAlignPancreas,
                         log.dir=file.path('./tmp'),
                         device="GPU")
 ```
-![Results](https://github.com/quon-titative-biology/examples/blob/master/scAlign_multiway_alignment/figures/pancreas_results.png)
+![Results](https://github.com/quon-titative-biology/examples/blob/master/scAlign_multiway_alignment/figures/pancreas_result.png)
