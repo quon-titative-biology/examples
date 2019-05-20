@@ -202,4 +202,4 @@ Heatmap(as.matrix(scDExpr[reorder,]),
 dev.off()
 ```
 
-![PairedDE](https://github.com/quon-titative-biology/examples/tree/master/scAlign_paired_alignment/figures/scDExpr_heatmap.png)
+![PairedDE](https://github.com/quon-titative-biology/examples/blob/master/scAlign_paired_alignment/figures/scDExpr_heatmap.png)
