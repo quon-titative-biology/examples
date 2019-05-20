@@ -144,8 +144,8 @@ cca_plot = PlotTSNE(scAlignHSC, "ALIGNED-CCA", title="scAlign-CCA", cols=c("red"
 legend = get_legend(PlotTSNE(scAlignHSC, "ALIGNED-GENE", title="scAlign-Gene", cols=c("red","blue"), labels.use="group.by", legend="right", max_iter=1))
 combined_plot = grid.arrange(gene_plot, pca_plot, cca_plot, legend, nrow = 1, layout_matrix=cbind(1,1,1,2,2,2,3,3,3,4))
 ```
-![Cell_label](https://github.com/quon-titative-biology/examples/blob/master/scAlign_kowalcyzk_et_al/figures/combined_plot_alignment_label.png)
-![Cell_batch](https://github.com/quon-titative-biology/examples/blob/master/scAlign_kowalcyzk_et_al/figures/combined_plot_alignment_stim.png)
+![Cell_label](https://github.com/quon-titative-biology/examples/tree/master/scAlign_paired_alignment/figures/combined_plot_alignment_label.png)
+![Cell_batch](https://github.com/quon-titative-biology/examples/tree/master/scAlign_paired_alignment/figures/combined_plot_alignment_stim.png)
 
 ## Paired differential expression of young and old cells.
 Since we have run the decoder for "ALIGNED-GENE" alignment we can also investigate the paired differential of cells with respect to the young and old conditions. The projections are saved as "YOUNG2OLD" and "OLD2YOUNG" in `scAlignHSC` reducededDims. "YOUNG2OLD" indicates the projection of young cells into the expression space of old cells. As a reminder the combined matrices are always in the order of the `sce.objects` list passed to `scAlignCreateObject`.
@@ -202,4 +202,4 @@ Heatmap(as.matrix(scDExpr[reorder,]),
 dev.off()
 ```
 
-![PairedDE](https://github.com/quon-titative-biology/examples/blob/master/scAlign_kowalcyzk_et_al/figures/scDExpr_heatmap.png)
+![PairedDE](https://github.com/quon-titative-biology/examples/tree/master/scAlign_paired_alignment/figures/scDExpr_heatmap.png)
