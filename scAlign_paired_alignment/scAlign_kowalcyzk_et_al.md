@@ -9,7 +9,7 @@ The following is a walkthrough of a typical alignment problem for `scAlign` and 
 2. Computing a single cell paired differential expression map from paired cell projections.
 
 ## Data setup
-The gene count matrices used for this tutorial are hosted [here](https://github.com/quon-titative-biology/examples/blob/master/scAlign_kowalcyzk_et_al/kowalcyzk_gene_counts.rda).
+The gene count matrices used for this tutorial are hosted [here](https://github.com/quon-titative-biology/examples/blob/master/scAlign_paired_alignment/kowalcyzk_gene_counts.rda).
 
 First, we perform a typical scRNA preprocessing step using the `Seurat` package. Then, reduce to the top 3,000 highly variable genes from both datasets to improve convergence and reduce computation time.
 
