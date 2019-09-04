@@ -39,7 +39,7 @@ for (i in 1:length(pancreas.list)) {
 }
 
 ## Extract common set of genes across all datasets
-genes.use = Reduce(union, lapply(pancreas.list, function(seurat.obj) seurat.obj@var.genes))
+genes.use = Reduce(intersect, lapply(pancreas.list, function(seurat.obj) seurat.obj@var.genes))
 
 ## Run CCA for input to scAlign
 pancreas.multi.cca = RunMultiCCA(pancreas.list, genes.use, num.ccs = 10)
