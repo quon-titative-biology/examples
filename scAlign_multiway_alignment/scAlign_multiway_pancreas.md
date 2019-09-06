@@ -65,7 +65,6 @@ pancreas.sce.list = lapply(pancreas.list,
                             })
 
 ## Create the combined scAlign object from list of SCE(s).
-reload(pkg = "scAlign", quiet = FALSE)
 scAlignPancreas = scAlignCreateObject(sce.objects = pancreas.sce.list,
                                       genes.use = genes.use,
                                       cca.reduce=T,
