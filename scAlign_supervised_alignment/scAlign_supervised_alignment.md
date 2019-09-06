@@ -115,7 +115,7 @@ scAlignHSC = scAlignCreateObject(sce.objects = list("YOUNG"=youngMouseSCE, "OLD"
 
 ## Run scAlign with high_var_genes as input to the encoder (alignment) and logcounts with the decoder (projections).
 scAlignHSC = scAlign(scAlignHSC,
-                    options=scAlignOptions(steps=5000, log.every=5000, norm=TRUE, early.stop=FALSE, architecture="small"),
+                    options=scAlignOptions(steps=5000, log.every=5000, norm=TRUE, batch.norm.layer=TRUE, early.stop=FALSE, architecture="small"),
                     encoder.data="scale.data",
                     supervised='both',
                     run.encoder=TRUE,
