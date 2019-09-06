@@ -95,7 +95,7 @@ low-dimensional joint embedding space where the effect of age is removed allowin
 ```R
 ## Run scAlign with high_var_genes as input to the encoder (alignment) and logcounts with the decoder (projections).
 scAlignHSC = scAlign(scAlignHSC,
-                    options=scAlignOptions(steps=5000, log.every=5000, norm=TRUE, early.stop=FALSE, architecture="small"),
+                    options=scAlignOptions(steps=5000, log.every=5000, norm=TRUE, batch.norm.layer=TRUE, early.stop=FALSE, architecture="small"),
                     encoder.data="scale.data",
                     decoder.data="logcounts",
                     supervised='none',
@@ -106,7 +106,7 @@ scAlignHSC = scAlign(scAlignHSC,
 
 ## Additional run of scAlign with PCA, the early.stopping heuristic terminates the training procedure too early with PCs as input so it is disabled.
 scAlignHSC = scAlign(scAlignHSC,
-                    options=scAlignOptions(steps=15000, log.every=1000, norm=TRUE, early.stop=FALSE),
+                    options=scAlignOptions(steps=15000, log.every=1000, norm=TRUE, batch.norm.layer=TRUE, early.stop=FALSE),
                     encoder.data="PCA",
                     supervised='none',
                     run.encoder=TRUE,
@@ -116,7 +116,7 @@ scAlignHSC = scAlign(scAlignHSC,
 
 ## Additional run of scAlign with CCA
 scAlignHSC = scAlign(scAlignHSC,
-                    options=scAlignOptions(steps=5000, log.every=1000, norm=TRUE, early.stop=TRUE),
+                    options=scAlignOptions(steps=5000, log.every=1000, norm=TRUE, batch.norm.layer=TRUE, early.stop=TRUE),
                     encoder.data="CCA",
                     supervised='none',
                     run.encoder=TRUE,
