@@ -19,56 +19,58 @@ library(Seurat)
 library(SingleCellExperiment)
 library(gridExtra)
 
+## PMA depends on 'impute' from bioconductor
+# if (!requireNamespace("BiocManager", quietly = TRUE))
+#     install.packages("BiocManager")
+#
+# BiocManager::install("impute")
+library(PMA)
+
 ## User paths
 working.dir = "." #where the data files are located
 results.dir = "." #where the output should be stored
 
 ## Load in data
-pancreas.data = readRDS(file = paste0(working.dir, "pancreas_expression_matrix.rds"))
-metadata      = readRDS(file = paste0(working.dir, "pancreas_metadata.rds"))
+pancreas.data = readRDS(file = file.path(working.dir, "pancreas_expression_matrix.rds"))
+metadata      = readRDS(file = file.path(working.dir, "pancreas_metadata.rds"))
 
 ## Subset combined object into a list containing the four individual datasets
 pancreas      = CreateSeuratObject(pancreas.data, meta.data = metadata)
-pancreas.list = SplitObject(pancreas, attribute.1 = "tech")
+pancreas.list = SplitObject(pancreas, split.by = "tech")
 
 ## Independently preprocess each datasets
 for (i in 1:length(pancreas.list)) {
     pancreas.list[[i]] <- NormalizeData(pancreas.list[[i]])
     pancreas.list[[i]] <- ScaleData(pancreas.list[[i]], do.scale=T, do.center=T, display.progress=T)
-    pancreas.list[[i]] <- FindVariableGenes(pancreas.list[[i]], top.genes = 3000)
+    pancreas.list[[i]] <- FindVariableFeatures(pancreas.list[[i]], nFeatures = 3000)
 }
 
 ## Extract common set of genes across all datasets
-genes.use = Reduce(intersect, lapply(pancreas.list, function(seurat.obj) seurat.obj@var.genes))
-
-## Run CCA for input to scAlign
-pancreas.multi.cca = RunMultiCCA(pancreas.list, genes.use, num.ccs = 10)
+genes.use = Reduce(intersect, lapply(pancreas.list, function(seurat.obj) VariableFeatures(seurat.obj)))
 ```
 
 ## scAlign setup
 The general design of `scAlign` makes it agnostic to the input RNA-seq data representation. Thus, the input data can either be
 gene-level counts, transformations of those gene level counts or a preliminary step of dimensionality reduction such
 as canonical correlates or principal component scores. Here we convert the previously defined
-`Seurat` objects to `SingleCellExperiment` objects in order to create the combined `scAlign` object.
+`Seurat` objects to `SingleCellExperiment` objects in order to create the combined `scAlign` object to which we append the results of Seurat's `RunMultiCCA`.
 
 ```R
 ## Convert each Seurat object into an SCE object, being sure to retain Seurat's metadata in SCE's colData field
 pancreas.sce.list = lapply(pancreas.list,
                            function(seurat.obj){
-                             SingleCellExperiment(assays = list(logcounts = seurat.obj@data[genes.use,],
-                                                                scale.data = seurat.obj@scale.data[genes.use,]),
+                             SingleCellExperiment(assays = list(logcounts = seurat.obj@assays$RNA@data[genes.use,],
+                                                                scale.data = seurat.obj@assays$RNA@scale.data[genes.use,]),
                                                   colData = seurat.obj@meta.data)
                             })
-```
-We now build the scAlign combined SCE object and append the results of RunMultiCCA. The output matrices of scAlign will always be ordered based on the sce.objects list order.
 
-```R
 ## Create the combined scAlign object from list of SCE(s).
+reload(pkg = "scAlign", quiet = FALSE)
 scAlignPancreas = scAlignCreateObject(sce.objects = pancreas.sce.list,
+                                      genes.use = genes.use,
+                                      cca.reduce=T,
+                                      ccs.compute=10,
                                       project.name = "scAlign_Pancreatic_Islet")
-
-## Append the results of MultiCCA to our scAlign object
-reducedDim(scAlignPancreas, "MultiCCA") = pancreas.multi.cca@dr$cca@cell.embeddings
 ```
 
 ## Alignment of sequencing protocols
