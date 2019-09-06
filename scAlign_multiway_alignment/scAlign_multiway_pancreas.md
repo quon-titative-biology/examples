@@ -79,6 +79,7 @@ Now we align the pancreas islets sequenced across different protocols using the 
 ## Run scAlign with CCA results as input to the encoder (alignment).
 scAlignPancreas = scAlignMulti(scAlignPancreas,
                         options=scAlignOptions(steps=15000,
+                                               batch.norm.layer=TRUE,
                                                log.every=5000,
                                                architecture="large",  ## 3 layer neural network
                                                num.dim=64),            ## Number of latent dimensions
