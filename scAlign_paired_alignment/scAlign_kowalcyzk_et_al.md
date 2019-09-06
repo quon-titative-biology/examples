@@ -36,25 +36,22 @@ young_data = C57BL6_mouse_data[unique(row.names(C57BL6_mouse_data)),which(cell_a
 old_data   = C57BL6_mouse_data[unique(row.names(C57BL6_mouse_data)),which(cell_age == "old")]
 
 ## Set up young mouse Seurat object
-youngMouseSeuratObj <- CreateSeuratObject(raw.data = young_data, project = "MOUSE_AGE", min.cells = 0)
-youngMouseSeuratObj <- FilterCells(youngMouseSeuratObj, subset.names = "nGene", low.thresholds = 100, high.thresholds = Inf)
+youngMouseSeuratObj <- CreateSeuratObject(counts = young_data, project = "MOUSE_AGE", min.cells = 0)
 youngMouseSeuratObj <- NormalizeData(youngMouseSeuratObj)
 youngMouseSeuratObj <- ScaleData(youngMouseSeuratObj, do.scale=T, do.center=T, display.progress = T)
 
 ## Set up old mouse Seurat object
-oldMouseSeuratObj <- CreateSeuratObject(raw.data = old_data, project = "MOUSE_AGE", min.cells = 0)
-oldMouseSeuratObj <- FilterCells(oldMouseSeuratObj, subset.names = "nGene", low.thresholds = 100, high.thresholds = Inf)
+oldMouseSeuratObj <- CreateSeuratObject(counts = old_data, project = "MOUSE_AGE", min.cells = 0)
 oldMouseSeuratObj <- NormalizeData(oldMouseSeuratObj)
 oldMouseSeuratObj <- ScaleData(oldMouseSeuratObj, do.scale=T, do.center=T, display.progress = T)
 
 ## Gene selection
-youngMouseSeuratObj <- FindVariableGenes(youngMouseSeuratObj, do.plot = F)
-oldMouseSeuratObj <- FindVariableGenes(oldMouseSeuratObj, do.plot = F)
-g.1 <- head(rownames(youngMouseSeuratObj@hvg.info), 3000)
-g.2 <- head(rownames(oldMouseSeuratObj@hvg.info), 3000)
-genes.use <- unique(c(g.1, g.2))
-genes.use <- intersect(genes.use, rownames(youngMouseSeuratObj@scale.data))
-genes.use <- intersect(genes.use, rownames(oldMouseSeuratObj@scale.data))
+youngMouseSeuratObj <- FindVariableFeatures(youngMouseSeuratObj, do.plot = F, nFeature=3000)
+oldMouseSeuratObj <- FindVariableFeatures(oldMouseSeuratObj, do.plot = F, nFeature=3000,)
+genes.use = Reduce(intersect, list(VariableFeatures(youngMouseSeuratObj),
+                                   VariableFeatures(oldMouseSeuratObj),
+                                   rownames(youngMouseSeuratObj),
+                                   rownames(oldMouseSeuratObj)))
 ```
 
 ## scAlign setup
@@ -66,17 +63,16 @@ as canonical correlates or principal component scores. Here we create the scAlig
 ```R
 ## Create paired dataset SCE objects to pass into scAlignCreateObject
 youngMouseSCE <- SingleCellExperiment(
-    assays = list(counts = youngMouseSeuratObj@raw.data[genes.use,],
-                  logcounts  = youngMouseSeuratObj@data[genes.use,],
-                  scale.data = youngMouseSeuratObj@scale.data[genes.use,])
+    assays = list(counts = youngMouseSeuratObj@assays$RNA@counts[genes.use,],
+                  logcounts  = youngMouseSeuratObj@assays$RNA@data[genes.use,],
+                  scale.data = youngMouseSeuratObj@assays$RNA@scale.data[genes.use,])
 )
 
 oldMouseSCE <- SingleCellExperiment(
-  assays = list(counts = oldMouseSeuratObj@raw.data[genes.use,],
-                logcounts  = oldMouseSeuratObj@data[genes.use,],
-                scale.data = oldMouseSeuratObj@scale.data[genes.use,])
+  assays = list(counts = oldMouseSeuratObj@assays$RNA@counts[genes.use,],
+                logcounts  = oldMouseSeuratObj@assays$RNA@data[genes.use,],
+                scale.data = oldMouseSeuratObj@assays$RNA@scale.data[genes.use,])
 )
-
 ```
 We now build the scAlign SCE object and compute PCs and/or CCs using Seurat for the assay defined by `data.use`. It is assumed that `data.use`, which is being used for the initial step of dimensionality reduction, is properly normalized and scaled. 
 Resulting combined matrices will always be ordered based on the sce.objects list order.
