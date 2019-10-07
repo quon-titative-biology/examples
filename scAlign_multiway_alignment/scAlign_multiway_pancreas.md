@@ -59,7 +59,8 @@ as canonical correlates or principal component scores. Here we convert the previ
 ## Convert each Seurat object into an SCE object, being sure to retain Seurat's metadata in SCE's colData field
 pancreas.sce.list = lapply(pancreas.list,
                            function(seurat.obj){
-                             SingleCellExperiment(assays = list(logcounts = seurat.obj@assays$RNA@data[genes.use,],
+                             SingleCellExperiment(assays = list(counts = seurat.obj@assays$RNA@counts[genes.use,],
+                                                                logcounts = seurat.obj@assays$RNA@data[genes.use,],
                                                                 scale.data = seurat.obj@assays$RNA@scale.data[genes.use,]),
                                                   colData = seurat.obj@meta.data)
                             })
@@ -79,14 +80,18 @@ Now we align the pancreas islets sequenced across different protocols using the 
 ## Run scAlign with CCA results as input to the encoder (alignment).
 scAlignPancreas = scAlignMulti(scAlignPancreas,
                         options=scAlignOptions(steps=15000,
-                                               batch.norm.layer=TRUE,
                                                log.every=5000,
+                                               batch.size=300,
+                                               perplexity=30,
+                                               norm=TRUE,
+                                               batch.norm.layer=FALSE,
                                                architecture="large",  ## 3 layer neural network
                                                num.dim=64),            ## Number of latent dimensions
                         encoder.data="MultiCCA",
+                        decoder.data="scale.data",
                         supervised='none',
                         run.encoder=TRUE,
-                        run.decoder=FALSE,
+                        run.decoder=TRUE,
                         log.results=TRUE,
                         log.dir=file.path('./tmp'),
                         device="GPU")
@@ -95,3 +100,24 @@ After alignment, `scAlign` returns a
 low-dimensional joint embedding space where the effect of sequencing protocol is removed allowing us to use the complete dataset for downstream analyses such as clustering
 or differential expression.
 ![Results](https://github.com/quon-titative-biology/examples/blob/master/scAlign_multiway_alignment/figures/pancreas_result.png)
+
+## Differential expression using scAlign embeddings for clustering
+After alignment we can use the resulting embeddings to cluster the cells without dataset specific biases then perform differential expression analysis. Further
+information about using Seurat to find clusters and differentially expressed genes can be found [here](https://satijalab.org/seurat/v3.1/pbmc3k_tutorial.html ).
+
+```R
+library(dplyr)
+scAlignSeuratObj = as.Seurat(scAlignPancreas, counts="counts", scale.data="scale.data")
+
+## Cluster the data based on scAlign embeddings, be sure to use all the embedding dimensions!
+scAlignSeuratObj <- FindNeighbors(scAlignSeuratObj, dims = 1:64, reduction="ALIGNED-MultiCCA")
+scAlignSeuratObj <- FindClusters(scAlignSeuratObj, resolution = 0.4)
+table(Idents(scAlignSeuratObj))
+
+## Find markers for each scAlign based cluster compared against the remaining cells.
+pancreas.markers <- FindAllMarkers(scAlignSeuratObj, only.pos = TRUE, min.pct = 0.25, logfc.threshold = 0.25)
+pancreas.markers %>% group_by(cluster) %>% top_n(n = 2, wt = avg_logFC)
+
+## Alternatively, find markers which are conserved when performing DE on each dataset individually.
+pancreas.markers <- FindConservedMarkers(scAlignSeuratObj, ident.1 = 0, ident.2 = 1, grouping.var = "group.by")
+```R
