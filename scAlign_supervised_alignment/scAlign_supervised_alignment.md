@@ -25,7 +25,7 @@ working.dir = "." #where our data file, kowalcyzk_gene_counts.rda is located
 results.dir = "." #where the output should be stored
 
 ## Load in data
-load(file.path(working.dir, 'kowalcyzk_gene_counts.rda'))
+load(url('https://github.com/quon-titative-biology/examples/blob/master/scAlign_paired_alignment/kowalcyzk_gene_counts.rda?raw=true'))
 
 ## Extract age and cell type labels
 cell_age = unlist(lapply(strsplit(colnames(C57BL6_mouse_data), "_"), "[[", 1))
