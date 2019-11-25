@@ -19,6 +19,7 @@ library(scAlign)
 library(Seurat)
 library(SingleCellExperiment)
 library(gridExtra)
+library(cowplot)
 
 ## User paths
 working.dir = "." #where our data file, kowalcyzk_gene_counts.rda is located
