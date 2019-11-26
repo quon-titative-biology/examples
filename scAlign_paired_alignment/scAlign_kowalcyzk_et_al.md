@@ -55,6 +55,40 @@ genes.use = Reduce(intersect, list(VariableFeatures(youngMouseSeuratObj),
                                    rownames(oldMouseSeuratObj)))
 ```
 
+## Initial check of unaligned data
+Let us first check the overlap of our dataset before performing integration.
+
+```R
+## Combine our Seurat objects
+hsc.combined <- merge(youngMouseSeuratObj, oldMouseSeuratObj, add.cell.ids = c("YOUNG", "OLD"), project = "HSC")
+hsc.combined <- ScaleData(hsc.combined, do.scale=T, do.center=T, display.progress = T)
+VariableFeatures(hsc.combined) = genes.use
+
+## Run PCA and TSNE
+hsc.combined = RunPCA(hsc.combined, do.print=FALSE)
+hsc.combined = RunTSNE(hsc.combined, dims.use = 1:30, max_iter=2000)
+
+## Plot tsne results
+plot.me <- data.frame(x=hsc.combined@reductions$tsne@cell.embeddings[,1],
+                      y=hsc.combined@reductions$tsne@cell.embeddings[,2],
+                      labels=Idents(hsc.combined),
+                      stringsAsFactors=FALSE)
+unaligned.plot <- ggplot(plot.me, aes(x=x, y=y, colour = labels)) +
+                  geom_point(size=2) +
+                  scale_colour_manual(values=c("blue", "red")) +
+                  xlab('t-SNE 1') +
+                  ylab('t-SNE 2') +
+                  theme_bw() +
+                  theme(panel.border = element_blank(),
+                        panel.grid.major = element_blank(),
+                        panel.grid.minor = element_blank(),
+                        panel.background = element_rect(fill = "transparent"), # bg of the panel
+                        plot.background = element_rect(fill = "transparent", color = NA),
+                        axis.line = element_line(colour = 'black',size=1))
+plot(unaligned.plot)
+```
+![Unaligned](https://github.com/quon-titative-biology/examples/blob/master/scAlign_paired_alignment/figures/unaligned_plot.png)
+
 ## scAlign setup
 The general design of `scAlign` makes it agnostic to the input RNA-seq data representation. Thus, the input data can either be
 gene-level counts, transformations of those gene level counts or a preliminary step of dimensionality reduction such
