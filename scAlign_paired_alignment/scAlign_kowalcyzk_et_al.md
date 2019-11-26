@@ -56,7 +56,7 @@ genes.use = Reduce(intersect, list(VariableFeatures(youngMouseSeuratObj),
 ```
 
 ## Initial check of unaligned data
-Let us first check the overlap of our dataset before performing integration.
+First, lets check the overlap of the old and young mouse cells before performing integration.
 
 ```R
 ## Combine our Seurat objects
