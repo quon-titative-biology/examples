@@ -107,7 +107,7 @@ information about using Seurat to find clusters and differentially expressed gen
 
 ```R
 library(dplyr)
-scAlignSeuratObj = as.Seurat(scAlignPancreas, counts="counts", scale.data="scale.data")
+scAlignSeuratObj = as.Seurat(scAlignPancreas, counts="counts", data="logcounts", assay="RNA")
 
 ## Cluster the data based on scAlign embeddings, be sure to use all the embedding dimensions!
 scAlignSeuratObj <- FindNeighbors(scAlignSeuratObj, dims = 1:64, reduction="ALIGNED-MultiCCA")
