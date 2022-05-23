@@ -44,9 +44,6 @@ scRNA Atlas                   cell x gene
 scRNA Atlas cell type labels  cell x 1
 mixture                       sample x gene
 ```
-
-Furthermore, we have to determine the marker genes to focus on for deconvolution.
-
 ```R
 ## Load scProjection with the component and mixture rna-seq data
 deconvModel = scProjection$deconvModel(component_data   = as.matrix(component_data),
@@ -56,8 +53,16 @@ deconvModel = scProjection$deconvModel(component_data   = as.matrix(component_da
 
 ```
 
+Furthermore, we have to determine the marker genes to focus on for deconvolution.
+```R
+## Lets define a mask for the marker genes (1=marker, 0=non_marker). In the case, all the genes are marker genes!
+marker_gene_mask = rep(0, ncol(component_data))
+marker_gene_mask[which(colnames(component_data) %in% marker.genes)] = 1
+```
+
 ## Deconvolution of mouse PatchSeq gene expr.
 Now, we take our defined `deconvModel` and run the deconvolution task!
+
 ```R
 ## Now lets run deconvolution, I have left the hyperparameters exposed here so you can see the different ways that the model could be tuned.
 deconvModel$deconvolve(## Masks
@@ -106,8 +111,10 @@ proportions = deconvResults@proportions$final
 
 ## Call cell type from proportions
 predicted.labels = deconvModel$celltypes[apply(proportions, 1, which.max)]
+```
 
 ## Plot the estimated proportions
+```R
 pdf(paste0("./cellbench_deconv_summary.pdf"), width=14, height=12)
 propHeatmap(proportions, mixture.labels=est.labels)
 dev.off()
