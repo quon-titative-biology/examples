@@ -16,7 +16,7 @@ source ./pyvTf2/bin/activate
 ```
 
 ## Setup R workspace
-Now we launch R where the remaining steps will be performed. Please download the R scripts located here:
+Now we launch R where the remaining steps will be performed. Please download the R scripts located here: https://github.com/quon-titative-biology/examples/tree/master/scProjection_cellbench/R
 
 ```R
 library(reticulate) ## Let's us call Python from R!
