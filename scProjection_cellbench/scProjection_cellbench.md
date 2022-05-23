@@ -1,6 +1,6 @@
 # Tutorial: Deconvolution of CellBench mixtures
 
-This tutorial provides a guided deconvolution of the benchmark dataset CellBench which contains simulated bulk RNA-seq. Deconvolution requires a reference atlas to define the gene expression patterns of individual cell types within the mixtures. In this tutorial we will be using a matched scRNA-seq atlas also from CellBench, the data can be found here: .
+This tutorial provides a guided deconvolution of the benchmark dataset CellBench which contains simulated bulk RNA-seq. Deconvolution requires a reference atlas to define the gene expression patterns of individual cell types within the mixtures.
 
 ## Steps for tutorial
 The following is a walkthrough of a standard deconvolution problem with `scProjection` and has been designed to provide an overview of setting up the deconvolution model and sanity checking the results. Here, our primary goals include:
@@ -10,7 +10,7 @@ The following is a walkthrough of a standard deconvolution problem with `scProje
 3. Perform standard sanity checks on estimated cell type abundances.
 
 ## Setup python/system
-Launch a virtual environment that contains the dependencies for scProjection, detailed here:
+Launch a virtual environment that contains the dependencies for scProjection, as detailed here: https://github.com/quon-titative-biology/scProjection#setup-of-virtualenv
 ```shell
 source ./pyvTf2/bin/activate
 ```
@@ -27,6 +27,13 @@ scProjection = import("scProjection")
 ## Load in helper functions/scripts
 source('nnDeconvClass.R')
 source('proportionHeatmap.R')
+
+```
+
+## Load data
+In this tutorial we will be using a matched scRNA-seq atlas also from CellBench, the data can be found here: https://github.com/quon-titative-biology/examples/blob/master/scProjection_cellbench/data/deconv_tutorial_CELBENCH.rda.
+```R
+load("deconv_tutorial_CELBENCH.rda")
 ```
 
 ## Deconv. model setup
@@ -41,9 +48,12 @@ mixture                       sample x gene
 Furthermore, we have to determine the marker genes to focus on for deconvolution.
 
 ```R
-deconvModel = deconv$deconvModel(component_data   = as.matrix(component_data),
-                                 component_label  = as.array(as.character(component_label)),
-                                 mixture_data     = as.matrix(mixture_data))
+## Load scProjection with the component and mixture rna-seq data
+deconvModel = scProjection$deconvModel(component_data   = as.matrix(component_data),
+                                       component_label  = as.array(as.character(component_label)),
+                                       mixture_data     = as.matrix(mixture_data))
+
+
 ```
 
 ## Deconvolution of mouse PatchSeq gene expr.
