@@ -60,7 +60,7 @@ marker_gene_mask = rep(0, ncol(component_data))
 marker_gene_mask[which(colnames(component_data) %in% marker.genes)] = 1
 ```
 
-## Deconvolution of mouse PatchSeq gene expr.
+## Deconvolution of CellBench
 Now, we take our defined `deconvModel` and run the deconvolution task!
 
 ```R
