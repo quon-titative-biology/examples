@@ -131,8 +131,7 @@ proportionSanityCheck(deconvResults,
 ![proportion_check](https://github.com/ucdavis/quonlab/blob/master/development/deconvAllen/deconvTutorial/mouse_patchseq_example_run.png) -->
 
 ## Projection Tutorial
-Coming soon!
-<!-- Finally, `scProjection` also outputs all the mixture samples purified to each cell type in the scRNAseq atlas. Let's take a look at the purified and scRNA data.
+Finally, `scProjection` also outputs all the mixture samples purified to each cell type in the scRNAseq atlas. Let's take a look at the purified and scRNA data.
 ```R
 ## Let's first check all the types of purified data we have!
 print(names(deconvResults@deconv_data$purified$train))
@@ -174,4 +173,4 @@ dev.off()
 
 ```R
 sessionInfo()
-``` -->
+```
