@@ -14,8 +14,6 @@ from scvi.data import smfish, cortex
 from scvi.external import GIMVI
 path = "/group/gquongrp/workspaces/hongruhu/scProjection/sc_atlas/imputation/scProjection/"
 
-## Imputing missing genes in spatial data from sequencing data with gimVI
-
 spatial_data = smfish()
 seq_data = cortex()
 
@@ -162,17 +160,11 @@ for rand_test_gene_idx in range(n_genes):
     fileObj.close()
     print(exampleObj)
     deconvModel = exampleObj
-    # component_label.unique()
-    # # array(['interneurons', 'pyramidal_SS', 'pyramidal_CA1',
-    # #        'oligodendrocytes', 'microglia', 'endothelial_mural',
-    # #        'astrocytes_ependymal'], dtype=object)
     deconvModel.deconvResults.deconv_data['purified']['train']["interneurons"].shape
-    # (4530, 33)
     spatial_data_partial # 4530 × 26
     df_sum_purified = np.zeros(deconvModel.deconvResults.deconv_data['purified']['train']["interneurons"].shape)
     deconvModel.deconvResults.proportions[str(final)]
     deconvModel.deconvResults.deconv_data['purified']['train'].keys()
-    # dict_keys(['astrocytes_ependymal', 'endothelial_mural', 'interneurons', 'microglia', 'oligodendrocytes', 'pyramidal_CA1', 'pyramidal_SS'])
     cell_labels = list(deconvModel.deconvResults.deconv_data['purified']['train'].keys())
     prop = pd.DataFrame(deconvModel.deconvResults.proportions[str(final)], columns=cell_labels)
     for i in cell_labels:
