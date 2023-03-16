@@ -183,7 +183,7 @@ deconvModel.deconvolve(marker_gene_mask         = marker_gene_mask,
 deconvModel.deconvResults.deconv_data.keys()
 # dict_keys(['component', 'purified'])
 ```
-
+the training will take about less than 30 min with one GPU
 
 ## save and load models
 ```
