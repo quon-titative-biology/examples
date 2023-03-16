@@ -1,9 +1,10 @@
 ## Tutorial for gene imputation using osmFISH dataset
 
+
+#### data loading: osmFISH data and reference singel cell RNA-seq data
 ```
 import deconv
 import pickle 
-
 import scanpy
 import anndata
 import numpy as np
@@ -27,7 +28,10 @@ spatial_data
 seq_data
 # AnnData object with n_obs × n_vars = 3005 × 19972
 #     obs: 'labels', 'precise_labels', 'cell_type'
+```
 
+#### data processing
+```
 all_genes = list(spatial_data.var.index.sort_values())
 spatial_data = spatial_data[:, all_genes].copy()
 #seq_data = seq_data[:, all_genes].copy()
@@ -58,12 +62,10 @@ seq_data.X
 
 spatial_data.X.shape
 seq_data.X.shape
+```
 
-
-###############################################################################################################
-# In this section, we hold out some of the genes in the spatial dataset in order to test the imputation results
-###############################################################################################################
-#only use genes in both datasets
+#### leave-one-gene-out per training
+```
 seq_data = seq_data[:, spatial_data.var_names].copy()
 seq_data
 seq_gene_names = seq_data.var_names
@@ -85,7 +87,10 @@ print(n_genes, n_train_genes) # 33 32
 seq_data.obs.cell_type[seq_data.obs.cell_type == "pyramidal SS"] = "pyramidal_SS"
 seq_data.obs.cell_type[seq_data.obs.cell_type == "pyramidal CA1"] = "pyramidal_CA1"
 seq_data.obs.cell_type[seq_data.obs.cell_type == "endothelial-mural"] = "endothelial_mural"
+```
 
+#### training the models (33 models, in each model, using the 32 gene expression patterns to impute the held-out one)
+```
 corr_list = []
 df_original = pd.DataFrame(index=range(spatial_data.shape[0]), columns=all_genes)
 df_imputed = pd.DataFrame(index=range(spatial_data.shape[0]), columns=all_genes)
