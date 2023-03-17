@@ -118,8 +118,10 @@ predicted.labels = deconvModel$celltypes[apply(proportions, 1, which.max)]
 pdf(paste0("./cellbench_deconv_summary.pdf"), width=14, height=12)
 propHeatmap(proportions, mixture.labels=ground.truth.label)
 dev.off()
-![]("https://github.com/quon-titative-biology/examples/blob/master/scProjection_cellbench/figures/cellbench_deconv_summary.pdf")
 ```
+
+![]("https://github.com/quon-titative-biology/examples/blob/master/scProjection_cellbench/figures/cellbench_deconv_summary.pdf")
+
 <!-- ## Proportion sanity check
 Let's take a quick look at the proportions and make sure the marker gene expression supports the estimated cell type proportions.
 ```R
