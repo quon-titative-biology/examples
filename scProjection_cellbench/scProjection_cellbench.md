@@ -102,9 +102,9 @@ While `deconvModel` holds all the input data and results, it is a python class w
 ```R
 ## Convert the python class to an R S4 class. check: str(deconvResults)
 deconvResults = convertDeconv(deconvModel,               ## Deconv model object
-                              rownames(component_data),  ## Features used during deconvolution
-                              colnames(component_data),  ## scRNA cell ids
-                              colnames(mixture_data))    ## mixture sample ids
+                              colnames(component_data),  ## Features used during deconvolution
+                              rownames(component_data),  ## scRNA cell ids
+                              rownames(mixture_data))    ## mixture sample ids
 
 ## Get the final proportion estimates
 proportions = deconvResults@proportions$final
@@ -136,27 +136,35 @@ proportionSanityCheck(deconvResults,
 ## Projection Tutorial
 Finally, `scProjection` also outputs all the mixture samples purified to each cell type in the scRNAseq atlas. Let's take a look at the purified and scRNA data.
 ```R
+library(Seurat)
+
 ## Let's first check all the types of purified data we have!
 print(names(deconvResults@deconv_data$purified$train))
 
 ## We extract the purified data for the `Sst` cell type as follows:
-pure.data.sst = t(deconvResults@deconv_data$purified$train$Sst) ## Make gene x cell for now
-rownames(pure.data.sst) = deconvResults@genes
-colnames(pure.data.sst) = deconvResults@mixtureCellNames
+pure.data.h2228 = t(deconvResults@deconv_data$purified$train$H2228) ## Make gene x cell for now
+rownames(pure.data.h2228) = deconvResults@genes
+colnames(pure.data.h2228) = deconvResults@mixtureCellNames
+
+## Lets only keep mixture samples with high proportion of H2228
+pure.data.h2228 = pure.data.h2228[,which(predicted.labels == "H2228")]
 
 ## Now lets plot the scRNA and purified data together to see how our model performed.
 ## First step, convert the purified data to a Seurat object (in a somewhat hacky way)
-pure.seurat = CreateSeuratObject(pure.data.sst)
-pure.seurat@assays$RNA@data = pure.seurat@assays$RNA@scale.data = pure.data.sst
+pure.seurat = CreateSeuratObject(pure.data.h2228)
+pure.seurat@assays$RNA@data = pure.seurat@assays$RNA@scale.data = pure.data.h2228
+
+component.seurat = CreateSeuratObject(t(component_data))
+component.seurat@assays$RNA@data = component.seurat@assays$RNA@scale.data = t(component_data)
 
 ## Merge the pure and scRNA Data
-merged.seurat = merge(mouse, pure.seurat)
-merged.seurat@assays$RNA@scale.data = cbind(GetAssayData(mouse, "scale.data")[rownames(pure.seurat),],
+merged.seurat = merge(component.seurat, pure.seurat)
+merged.seurat@assays$RNA@scale.data = cbind(GetAssayData(component.seurat, "scale.data")[rownames(pure.seurat),],
                                             GetAssayData(pure.seurat, "scale.data")[rownames(pure.seurat),])
 
 ## Update the celltype.deconv for the Sst purified data
-merged.seurat@meta.data$celltype.deconv = c(mouse@meta.data$celltype.deconv, rep("Sst", ncol(pure.seurat)))
-merged.seurat@meta.data$datatype = c(rep("scRNA", ncol(mouse)), rep("purifiedSst", ncol(pure.seurat)))
+merged.seurat@meta.data$celltype.deconv = c(as.character(component_label), rep("H2228", ncol(pure.seurat)))
+merged.seurat@meta.data$datatype = c(rep("component", ncol(component.seurat)), rep("purified", ncol(pure.seurat)))
 
 ## Run dimensionality reduction on just the marker genes
 merged.seurat <- RunPCA(merged.seurat, npcs = 30, features=marker.genes, verbose = FALSE)
@@ -168,11 +176,11 @@ datatype.plot <- DimPlot(merged.seurat, reduction = "umap", group.by = "datatype
 
 ## Save our plot
 library(cowplot)
-png("./mouse_pure_scRNA_atlas.png", width=24, height=12, res=150,  units="in")
+png("~/component_and_pure_scRNA_atlas.png", width=24, height=12, res=150,  units="in")
 plot_grid(celltype.plot, datatype.plot)
 dev.off()
 ```
-![purified_check]()
+![purified_check](https://github.com/quon-titative-biology/examples/blob/master/scProjection_cellbench/figures/component_and_pure_scRNA_atlas.png)
 
 ```R
 sessionInfo()
