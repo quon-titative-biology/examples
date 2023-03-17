@@ -120,7 +120,7 @@ propHeatmap(proportions, mixture.labels=ground.truth.label)
 dev.off()
 ```
 
-![]("https://github.com/quon-titative-biology/examples/blob/master/scProjection_cellbench/figures/cellbench_deconv_summary.png")
+![](https://github.com/quon-titative-biology/examples/blob/master/scProjection_cellbench/figures/cellbench_deconv_summary.png)
 
 <!-- ## Proportion sanity check
 Let's take a quick look at the proportions and make sure the marker gene expression supports the estimated cell type proportions.
